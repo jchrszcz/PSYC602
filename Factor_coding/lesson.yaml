@@ -1,0 +1,151 @@
+- Class: meta
+  Course: PSYC602
+  Lesson: Factor coding
+  Author: Jeffrey Chrabaszcz
+  Type: Standard
+  Organization: UMD
+  Version: 2.2.21
+
+- Class: text
+  Output: In the minds of many, the difference between regression and ANOVA is defined by the presence of categorical variables. This is not true! For most purposes, regression and ANOVA are different names for the same thing.
+
+- Class: text
+  Output: This may be confusing. It is easy to imagine how simple regression works. For example, say we want to predict 602 course grade with the number of hours spent studying. We would use regression to determine how to transform the number of hours spent studying into a GPA by multiplying the number of hours by one number (B1) and adding a second number (B0).
+
+- Class: text
+  Output: What if we wanted to use the department or program for each student to predict GPA instead? There is no undisputed order for the departments or programs, so we need some way to take an unordered set of categories and build a linear model. The solution, and the topic of this lesson, is factor (contrast) coding.
+
+- Class: cmd_question
+  Output: The "ChickWeight" dataset comes installed with R. Load it into your workspace with the data() function.
+  CorrectAnswer: data(ChickWeight)
+  AnswerTests: omnitest(correctExpr='data(ChickWeight)')
+  Hint: Type data(ChickWeight) to load the necessary dataset.
+  
+- Class: cmd_question
+  Output: The ChickWeight dataset measures the weights of baby chickens (chicks) as they consume four different diets over a period of weeks. The dataset is already a data.frame with some interesting features. Use summary() or str() to look at the ChickWeight data.
+  CorrectAnswer: summary(ChickWeight)
+  AnswerTests: any_of_exprs('summary(ChickWeight)', 'str(ChickWeight)')
+  Hint: Type summary(ChickWeight) to see a condensed version of the dataset.
+  
+- Class: cmd_question
+  Output: We can see that ChickWeight contains four variable, two of which are factors. summary() indicates factors by showing counts for each unique value in a variable, while str() explicitly denotes the type for each variable. Calculate the mean of one of the two variables that is NOT a factor.
+  CorrectAnswer: mean(ChickWeight$weight)
+  AnswerTests: any_of_exprs('mean(ChickWeight$weight)', 'mean(ChickWeight$Time)')
+  Hint: summary() will provide numerical summaries of numerical variables. str() labels the variables types.
+
+- Class: cmd_question
+  Output: Before we look at different models, let's plot our data so we know what we have some context for interpreting everything. First, load ggplot2.
+  CorrectAnswer: library(ggplot2)
+  AnswerTests: omnitest(correctExpr='library(ggplot2)')
+  Hint: You need to use library().
+
+- Class: cmd_question
+  Output: Now that you have ggplot2 loaded, use qplot() to create a boxplot of the weights for each diet.
+  CorrectAnswer: qplot(Diet, weight, data = ChickWeight, geom = "boxplot")
+  AnswerTests: omnitest(correctExpr='qplot(Diet, weight, data = ChickWeight, geom = "boxplot")')
+  Hint: You need to add 'geom = "boxplot"' to get boxplots instead of points.
+
+- Class: cmd_question
+  Output: What if we just have a dichotomous predictor? First, let's create a dataset named "temp" that contains data for only diets 3 and 4. Use square braces to subset ChickWeight such that the values of ChickWeight$Diet are %in% the vector c("3", "4").
+  CorrectAnswer: temp <- ChickWeight[ChickWeight$Diet %in% c("3", "4"), ]
+  AnswerTests: omnitest(correctVal='temp <- ChickWeight[ChickWeight$Diet %in% c("3", "4"), ]')
+  Hint: Only get the rows of ChickWeight where the values of Diet are "3" or "4".
+
+- Class: cmd_question
+  Output: "First we'll build a model predicting weight based on the diet condition. We don't need to save this model, just take a summary() of the lm() object directly."
+  CorrectAnswer: summary(lm(weight ~ Diet, data = temp))
+  AnswerTests: omnitest(correctExpr='summary(lm(weight ~ Diet, data = temp))')
+  Hint: Your answer should have summary(lm(...)), with the dots replaced by the necessary formula and data arguments.
+
+- Class: cmd_question
+  Output: "We get coefficient values that are ~142 and ~-7. What do these mean? We can get gain some insight on these coefficients by looking at the average weight for each diet. Use tapply() to get the mean for each value of the weight vector in our temp data.frame split by the Diet vector."
+  CorrectAnswer: tapply(temp$weight, temp$Diet, mean)
+  AnswerTests: omnitest(correctExpr='tapply(temp$weight, temp$Diet, mean)')
+  Hint: tapply() takes three arguments, the first should be temp$weight.
+
+- Class: text
+  Output: "We can see that the intercept corresponds to the mean of Diet 3, while the first slope coefficient is the difference in means between Diet 3 and Diet 4. This is the basic process all factor coding will follow: one or multiple groups will form the intercept and the subsequent coefficients encode deviations from the intercept. The dichotomous predictor is a special case: regardless of the type of coding (we'll see a few), one group's mean is the intercept and the coefficient is the deviation from the intercept group mean."
+
+- Class: cmd_question
+  Output: "By default, R uses dummy coding, also referred to as treatment coding, for unordered factors. Get the mean weights for each of the Diet groups in the full ChickWeight dataset, again using tapply()."
+  CorrectAnswer: tapply(ChickWeight$weight, ChickWeight$Diet, mean)
+  AnswerTests: omnitest(correctExpr='tapply(ChickWeight$weight, ChickWeight$Diet, mean)')
+  Hint: "The same as the last excercise, replace 'temp' with 'ChickWeight'."
+
+- Class: cmd_question
+  Output: In dummy coding, one factor level is chosen as the intercept. Each other level of the factor is then compared to that intercept level. To set up a regression to do this, you need to translate a single column of category labels into separate columns of a design matrix. R has functions to do this for the common contrast types. Enter contr.treatment(4) to see how the 4 values of diet (the row names) are translated into columns that can be treated numerically in a regression.
+  CorrectAnswer: contr.treatment(4)
+  AnswerTests: omnitest(correctExpr='contr.treatment(4)')
+  Hint: contr.treatment(4)
+
+- Class: cmd_question
+  Output: When you enter a factor as a predictor into a linear model, R uses a key like the one you generated in the last step to create a matrix of predictors from that single column of factor values. Type summary(model.matrix(~ Diet, ChickWeight)) to see the matrix that R uses to construct the model we'll examine next. Note that the (Intercept) column is equal to 1 at each position.
+  CorrectAnswer: summary(model.matrix(~ Diet, ChickWeight))
+  AnswerTests: omnitest(correctExpr='summary(model.matrix(~ Diet, ChickWeight))')
+  Hint: summary(model.matrix(~ Diet, ChickWeight))
+
+- Class: cmd_question
+  Output: Now let's get a summary of the model predicting weight with Diet for all diets in the ChickWeight dataset. Notice that the Intercept corresponds to the mean of Diet 1, while each of the other coefficients is the deviation from the other three diets to Diet 1.
+  CorrectAnswer: summary(lm(weight ~ Diet, data = ChickWeight))
+  AnswerTests: omnitest(correctExpr='summary(lm(weight ~ Diet, data = ChickWeight))')
+  Hint: Enter summary(lm(weight ~ Diet, data = ChickWeight)) to see the full model.
+
+- Class: cmd_question
+  Output: The tests given within a single model are sometimes referred to as planned comparisons. Most people claim you don't have to correct for multiple comparisons within your planned comparisons, though you certainly can for a more conservative test. Theoretically, you can know everything you need to know about the relationship between your categorically predictor and the outcome just based on the planned comparisons, but you can't necessarily get all of the pairwise comparisons you might want. You can change which planned comparisons you get, however; in R, this is done with relevel(). Use relevel() to change the reference level of Diet in ChickWeight to Diet 4.
+  CorrectAnswer: ChickWeight$Diet <- relevel(ChickWeight$Diet, ref = "4")
+  AnswerTests: omnitest(correctExpr='ChickWeight$Diet <- relevel(ChickWeight$Diet, ref = "4")')
+  Hint: Remember to assign the releveled factor vector back to ChickWeight$Diet.
+
+- Class: cmd_question
+  Output: "Now that you've changed the reference level of Diet, get another summary of the same model predicting weight using Diet."
+  CorrectAnswer: summary(lm(weight ~ Diet, data = ChickWeight))
+  AnswerTests: omnitest(correctExpr='summary(lm(weight ~ Diet, data = ChickWeight))')
+  Hint: Enter summary(lm(weight ~ Diet, data = ChickWeight)) to see the full model.
+
+- Class: cmd_question
+  Output: "We'll also use sum (deviation) coding frequently in class. For this coding scheme the intercept is the grand mean of all groups. The other coefficients test all but one group against this grand mean. Enter contr.sum(4) to see how the four diet groups will be recoded as a deviation code."
+  CorrectAnswer: contr.sum(4)
+  AnswerTests: omnitest(correctExpr='contr.sum(4)')
+  Hint: Enter contr.sum(4).
+
+- Class: cmd_question
+  Output: When fitting a model, you might want to change the coding of a factor or make the coding of a factor explicit in the model code. You can do this by specifying the contrasts argument. This argument taskes a list of the name for each factor in the model and the name of the function that creates the factor coding. Call the summary of the same weight ~ Diet model, this time specifying sum coding for Diet. Look in the hint for a solution if this is unclear.
+  CorrectAnswer: summary(lm(weight ~ Diet, contrasts = list(Diet = contr.sum), data = ChickWeight))
+  AnswerTests: omnitest(correctExpr='summary(lm(weight ~ Diet, contrasts = list(Diet = contr.sum), data = ChickWeight))')
+  Hint: "Add the following to your previous model: summary(lm(weight ~ Diet, contrasts = list(Diet = contr.sum), data = ChickWeight))"
+
+- Class: cmd_question
+  Output: Where do these coefficients come from? The intercept is the mean of weight across all Diet groups, often called the grand mean. Take the mean of weight and compare it to the intercept value.
+  CorrectAnswer: mean(ChickWeight$weight)
+  AnswerTests: omnitest(correctExpr='mean(ChickWeight$weight)')
+  Hint: Use the mean function on the vector of weights in ChickWeight.
+
+- Class: cmd_question
+  Output: "A quick way to get the slope coefficient values is to take the difference between the weights for each diet and the grand mean. Use tapply to do this, but note that you'll end up with the additional implied deviation. With planned comparisons, we can only get K - 1 deviations from the grand mean. The reason is similar to the bias correction for variance: once we've calculated a grand mean and K - 1 deviations from it, we already know what the last deviation has to be to give a mean of deviations equal to 0."
+  CorrectAnswer: tapply(ChickWeight$weight, ChickWeight$Diet, mean) - mean(ChickWeight$weight)
+  AnswerTests: omnitest(correctExpr='tapply(ChickWeight$weight, ChickWeight$Diet, mean) - mean(ChickWeight$weight)')
+  Hint: tapply(...) - mean(...)
+ 
+- Class: cmd_question
+  Output: The last contrast code we'll talk about is the Helmert code, often referred to generically as orthogonal coding. There are many orthogonal coding schemes, (you can even make up your own). Try running the same weight ~ Diet model, now specifying contr.helmert for the Diet contrast.
+  CorrectAnswer: summary(lm(weight ~ Diet, contrasts = list(Diet = contr.helmert), data = ChickWeight))
+  AnswerTests: omnitest(correctExpr='summary(lm(weight ~ Diet, contrasts = list(Diet = contr.helmert), data = ChickWeight))')
+  Hint: This should be the same as the last example, but with contr.helmert instead of contr.sum
+
+- Class: text
+  Output: One thing you might notice about the last output is that the coefficients no longer correspond to unweight comparisons between groups. The tests can be interpreted, in order, as the comparison between Diets 1 and 2, then between 3 and the average of 1 and 2, then between 4 and the average of 1, 2, and 3. By default, however, the helmert contrast won't give you the correct coefficients to recover group means.
+
+- Class: cmd_question
+  Output: To get the correctly-weighted coefficients, the values is each column of the helmert contrast matrix have to be divided by the number of non-zero values in each column. You can do this using apply() quite easily. Give it a try, the answer is in the hint.
+  CorrectAnswer: apply(contr.helmert(4), 2, function(x) x / sum(abs(x)))
+  AnswerTests: omnitest(correctExpr='apply(contr.helmert(4), 2, function(x) x / sum(abs(x)))')
+  Hint: apply(contr.helmert(4), 2, function(x) x / sum(abs(x))) will generate the appropriate matrix.
+
+- Class: cmd_question
+  Output: Now try running the weight ~ Diet model but specifying the contrast matrix using the code from the last step. Note that the coefficients test statistics are all unchanged, but the coefficients themselves correspond to the different comparisons previously mentioned.
+  CorrectAnswer: summary(lm(weight ~ Diet, contrasts = list(Diet = apply(contr.helmert(4), 2, function(x) x / sum(abs(x)))), data = ChickWeight))
+  AnswerTests: omnitest(correctExpr='summary(lm(weight ~ Diet, contrasts = list(Diet = apply(contr.helmert(4), 2, function(x) x / sum(abs(x)))), data = ChickWeight))')
+  Hint: This should lookd very similar to code you've used before, just substitute the apply() command in place of contr.sum.
+
+- Class: text
+  Output: That's it! All you need to know about contrasts for 602. We haven't mentioned it yet, but you might have noticed that the overall R squared and F tests don't change across all these models. We're just reshuffling how we recode the categorical variable to changethe displayed contrasts. The next lesson will include details on multiple comparison procedures in R, which you'll need if you want more than K - 1 comparisons for a categorical variable.
