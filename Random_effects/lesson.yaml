@@ -13,10 +13,10 @@
   Output: "Another question is: Is any difference in my outcome attributable to differences in my predictor variable? In this case, we don't care about the specific levels of the categorical predictor, only that differences in that predictor explain variability in the outcome. This question refers to random effects."
 
 - Class: text
-  Outcome: Kevin has/will review the theory behind fixed and random effects, I'm just going to give you some practical advice and an example. The first bit of practical advice is that you should refer to the course texts and Kevin's notes for answers to questions on fixed/random effects. That distinction maps onto at least 5 different published definitions, all of which are at odds with one another, and googling is more likely to confuse you than to help.
+  Outcome: "Kevin has/will review the theory behind fixed and random effects, I'm just going to give you some practical advice and an example. The first bit of practical advice is that you should refer to the course texts and Kevin's notes for answers to questions on fixed/random effects. That distinction maps onto at least 5 different published definitions, all of which are at odds with one another, and googling is more likely to confuse you than to help."
 
 - Class: text
-  Outcome: Your second bit of advice is that the distinction only matters when there are multiple factors in your model. If you have a one-way ANOVA, there is no difference between a fixed effect and a random one.
+  Outcome: "Your second bit of advice is that the distinction only matters when there are multiple factors in your model. If you have a one-way ANOVA, there is no difference between a fixed effect and a random one."
 
 - Class: cmd_question
   Outcome: "Alright, an example. We want to predict chick weights once again. This time, however, we're going to control for variability in measurements over time. In the process, we're going to do some things that R will really hate. Before we move on, take a summary of ChickWeight and notice I've included Time as a factor, (time with a lowercase t is not a factor), we we can run a proper ANOVA (because obviously ANCOVA is a completely different topic that you can't possibly be expected to understand yet)."
@@ -42,22 +42,22 @@
   Hint: Type summary.aov(random) to view the necessary model.
 
 - Class: mult_question
-  Output: R doesn't like this model and tells us the error term is singular. That's ok, it just means it can't test the interaction term against itself. You might notice that there's no test for the interaction. Where can we find that test?
+  Output: "R doesn't like this model and tells us the error term is singular. That's ok, it just means it can't test the interaction term against itself. You might notice that there's no test for the interaction. Where can we find that test?"
   AnswerChoices: It's here and hidden;In another model;We cannot test the interaction
   CorrectAnswer: In another model
-  AnswerTests: omnitest(correctVal= 'In another model')
+  AnswerTests: omnitest(correctVal='In another model')
   Hint: "Compare the fixed and random tables in the txt file."
 
 - Class: text
-  Output: We can see the interaction test is the same regardless of the fixed/random nature of the constituent effects. The only thing that changes is what you divide the mean squares for each effect by in order to get the appropriate main effect test. This means we have to build the regular fixed effect model to get a test of the interaction. There are deep and meaningful reasons for this that you can ignore for the moment.
+  Output: "We can see the interaction test is the same regardless of the fixed/random nature of the constituent effects. The only thing that changes is what you divide the mean squares for each effect by in order to get the appropriate main effect test. This means we have to build the regular fixed effect model to get a test of the interaction. There are deep and meaningful reasons for this that you can ignore for the moment."
 
 - Class: text
-  Output: The easiest way to deal with mixed models in R is to recompute the F statistics by hand using the fixed effects model. You could also use lme(), or lmer() from the lme4 package, but both of those functions are beyond the scope of this course. The key is that you your expected SS given the null hypothesis should be equal to one. Look at expected.txt! This means that if B if fixed and in a model with random effect A, B is the term that need to be tested against the interaction term.
+  Output: "The easiest way to deal with mixed models in R is to recompute the F statistics by hand using the fixed effects model. You could also use lme(), or lmer() from the lme4 package, but both of those functions are beyond the scope of this course. The key is that you your expected SS given the null hypothesis should be equal to one. Look at expected.txt! This means that if B if fixed and in a model with random effect A, B is the term that need to be tested against the interaction term."
 
 - Class: cmd_question
   Output: "A quick way to get mean squared error values from a fixed effects model is by using the syntax: anova(MODEL)[['Mean Sq']]. Try this with the fixed model and assign the output vector to a variable named mse."
-  CorrectAnswer: mse <- anova(fixed)[["Mean Sq"]]
-  AnswerTests: omnitest(correctExpr='mse <- anova(fixed)[["Mean Sq"]]')
+  CorrectAnswer: mse <- anova(fixed)[['Mean Sq']]
+  AnswerTests: omnitest(correctExpr='mse <- anova(fixed)[['Mean Sq']]')
   Hint: Copy and paste the code from the instructions, replace MODEL with fixed.
 
 - Class: cmd_question
