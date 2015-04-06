@@ -19,24 +19,24 @@
   Outcome: Your second bit of advice is that the distinction only matters when there are multiple factors in your model. If you have a one-way ANOVA, there is no difference between a fixed effect and a random one.
 
 - Class: cmd_question
-  Outcome: Alright, an example. We want to predict chick weights once again. This time, however, we're going to control for variability in measurements over time. In the process, we're going to do some things that R will really hate. Before we move on, take a summary of ChickWeight and notice I've included Time as a factor, (time with a lowercase t is not a factor), we we can run a proper ANOVA (because obviously ANCOVA is a completely different topic that you can't possibly be expected to understand yet).
+  Outcome: "Alright, an example. We want to predict chick weights once again. This time, however, we're going to control for variability in measurements over time. In the process, we're going to do some things that R will really hate. Before we move on, take a summary of ChickWeight and notice I've included Time as a factor, (time with a lowercase t is not a factor), we we can run a proper ANOVA (because obviously ANCOVA is a completely different topic that you can't possibly be expected to understand yet)."
   CorrectAnswer: summary(ChickWeight)
   AnswerTests: omnitest(correctExpr='summary(ChickWeight)')
   Hint: Type summary(ChickWeight) to view the necessary dataset.
 
 - Class: cmd_question
-  Outcome: "The first way you might imagine predicting weight using Diet and controlling for time is to use a formula like: weight ~ Diet + Time + Diet:Time. This would give you the fixed effects estimates for each of the terms in your model: Diet, Time, and the interaction. This model is already in your workspace, get a summary.aov of the object called "fixed" to see what this looks like."
+  Outcome: "The first way you might imagine predicting weight using Diet and controlling for time is to use a formula like: weight ~ Diet + Time + Diet:Time. This would give you the fixed effects estimates for each of the terms in your model: Diet, Time, and the interaction. This model is already in your workspace, get a summary.aov of the object called fixed to see what this looks like."
   CorrectAnswer: summary.aov(fixed)
   AnswerTests: omnitest(correctExpr='summary.aov(fixed)')
   Hint: Type summary.aov(fixed) to view the necessary model.
 
-- Class: Figure
-  Output: This model corresponds to the first table in the associated text file. Each component (A, B, and the interaction, AB) is tested by dividing the MS_effect by the MS_residual. You can easily see that if the null were true in any of these cases, and the effect of A, B, or AB were exactly zero, the expected SS would be one.
+- Class: figure
+  Output: "This model corresponds to the first table in the associated text file. Each component (A, B, and the interaction, AB) is tested by dividing the MS_effect by the MS_residual. You can easily see that if the null were true in any of these cases, and the effect of A, B, or AB were exactly zero, the expected SS would be one."
   Figure: expected.txt
   FigureType: new
 
 - Class: cmd_question
-  Output: "This model is what you would use if the measurement times and diets were chosen specifically and were not drawn from any larger population. Instead, let's pretend that both Time and Diet are randomly sampled from infinitely many possible measurement times and diet regimes. We specify this with the command aov(weight ~ Time + Diet + Error(Time:Diet)). aov is another way of building ANOVA models in R that will allow us to explicitly specify the error term. This is not the only difference between lm and aov, but we can return to the other big difference (which type of sums of squares the functions calculate) some other time. For now, take a summary.aov of "random", another model that's already in your workspace."
+  Output: "This model is what you would use if the measurement times and diets were chosen specifically and were not drawn from any larger population. Instead, let's pretend that both Time and Diet are randomly sampled from infinitely many possible measurement times and diet regimes. We specify this with the command aov(weight ~ Time + Diet + Error(Time:Diet)). aov is another way of building ANOVA models in R that will allow us to explicitly specify the error term. This is not the only difference between lm and aov, but we can return to the other big difference (which type of sums of squares the functions calculate) some other time. For now, take a summary.aov of random, another model that's already in your workspace."
   CorrectAnswer: summary.aov(random)
   AnswerTests: omnitest(correctExpr='summary.aov(random)')
   Hint: Type summary.aov(random) to view the necessary model.
@@ -55,7 +55,7 @@
   Output: The easiest way to deal with mixed models in R is to recompute the F statistics by hand using the fixed effects model. You could also use lme(), or lmer() from the lme4 package, but both of those functions are beyond the scope of this course. The key is that you your expected SS given the null hypothesis should be equal to one. Look at expected.txt! This means that if B if fixed and in a model with random effect A, B is the term that need to be tested against the interaction term.
 
 - Class: cmd_question
-  Output: "A quick way to get mean squared error values from a fixed effects model is by using the syntax: anova(MODEL)[["Mean Sq"]]. Try this with the fixed model and assign the output vector to a variable named "mse"."
+  Output: "A quick way to get mean squared error values from a fixed effects model is by using the syntax: anova(MODEL)[['Mean Sq']]. Try this with the fixed model and assign the output vector to a variable named mse."
   CorrectAnswer: mse <- anova(fixed)[["Mean Sq"]]
   AnswerTests: omnitest(correctExpr='mse <- anova(fixed)[["Mean Sq"]]')
   Hint: Copy and paste the code from the instructions, replace MODEL with fixed.

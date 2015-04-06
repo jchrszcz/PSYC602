@@ -7,4 +7,4 @@ data(ChickWeight)
 ChickWeight$time <- ChickWeight$Time
 ChickWeight$Time <- as.factor(ChickWeight$time)
 fixed <- lm(weight ~ Time * Diet, data = ChickWeight)
-random <- aov(weight ~ Diet + Time + Error(Diet:Time), data = ChickWeight)
+suppressWarnings(random <- aov(weight ~ Diet + Time + Error(Diet:Time), data = ChickWeight))
