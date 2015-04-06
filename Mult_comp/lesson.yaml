@@ -7,4 +7,34 @@
   Version: 2.2.21
 
 - Class: text
-  Output: Coming soon.
+  Output: "In NHST, we generally only want to make errors 5% of the time. For whatever reasons, convention tells us that messing up 5% of the time is ok, but more than that would be a mortal sin. Some people will tell you that you need to control your error rate within a single model by correcting your tests for multiple comparisons. Generally this is only necessary when getting more than your planned comparisons."
+
+- Class: cmd_question
+  Output: "We will once again examine the effect of Diet on the weight of some baby chickens. This time, however, we will be comparing each diet to each other diet and using two differnt corrections for multiple comparisons. Take a moment to familiarize yourself with our model by taking a summary of the fit object, which is an aov object created using ChickWeight and the formula: weight ~ Diet."
+  CorrectAnswer: summary(fit)
+  AnswerTests: omnitest(correctExpr='summary(fit)')
+  Hint: The fit object is an aov, you need to see the summary output.
+
+- Class: cmd_question
+  Output: "The pairwise.t.test function is part of base R and will calculate pariwise tests for simple models. The following code would calculate the pairwise test for Diet with no correction: pairwise.t.test(ChickWeight$weight, ChickWeight$Diet, p.adjust.method = "none"). Using the help file, google, and common sense, calculate the Bonferroni-corrected p-values."
+  CorrectAnswer: pairwise.t.test(ChickWeight$weight, ChickWeight$Diet, p.adjust.method = "bonferroni")
+  AnswerTests: omnitest(correctExpr='pairwise.t.test(ChickWeight$weight, ChickWeight$Diet, p.adjust.method = "bonferroni")')
+  Hint: p.adjust.method = "bonferroni"
+
+- Class: mult_question
+  Output: "Look at the output for the last two sets of tests. For which group did the Bonferroni correction NOT change the associated inference?"
+  AnswerChoices: 1 & 2;2 & 3;3 & 4
+  CorrectAnswer: 3 & 4
+  AnswerTests: omnitest(correctVal='3 & 4')
+
+- Class: text
+  Output: "Another of the many possible methods is the Scheffe test. This test is Kevin's favorite, but it's not included in R. You can find scheffe.test in the agricolae package, however, which was loaded with this lesson. scheffe.test takes at least two arguments, we'll give it three. The first is a model fit with aov. The second is the name, as a string, of the treatment of interest. Finally, you should specify console = TRUE to print the results. Try running Scheffe's test with the model named fit we summarized earlier."
+  CorrectAnswer: scheffe.test(fit, "Diet", console = TRUE)
+  AnswerTests: omnitest(correctExpr='scheffe.test(fit, "Diet", console = TRUE)')
+  Hint: The second argument is "Diet".
+
+- Class: text
+  Output: The output here is a bit odd, but that last table shows you the comparisons you need using unique letters in the first column. Groups 1, 2, and 3 are different from one another. Group 1 is different from group 4. Since group 4 is identified as ab, though, any group with either a or b in the identification, in this case groups 2 and 3, are not different from 4 at the corrected equivalent of alpha = .05.
+
+- Class: text
+  Output: This has been a short summary of multiple comparisons methods in R. When in doubt, correct for multiple comparisons. The worst that happens is you end up being a bit too conservative. Remember that the answer to not-significant tests is always sample size. A larger sample will all but guarantee you a p < .04, eventually.
