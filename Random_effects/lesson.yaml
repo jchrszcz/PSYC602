@@ -7,28 +7,28 @@
   Version: 2.2.21
 
 - Class: text
-  Output: "In the ANOVA ideology, we can ask two qualitatively different sorts of questions about a categorical variable. The first is: Do different, individual levels of my predictor correspond to differences in my outcome? In this case, the levels of the categorical predictor are of interest. We refer to this question as referring to fixed effects."
+  Output: "In the ANOVA ideology, we can ask two qualitatively different sorts of questions about a categorical variable. The first is: Do different, individual levels of my predictor correspond to differences in my Output? In this case, the levels of the categorical predictor are of interest. We refer to this question as referring to fixed effects."
 
 - Class: text
-  Output: "Another question is: Is any difference in my outcome attributable to differences in my predictor variable? In this case, we don't care about the specific levels of the categorical predictor, only that differences in that predictor explain variability in the outcome. This question refers to random effects."
+  Output: "Another question is: Is any difference in my Output attributable to differences in my predictor variable? In this case, we don't care about the specific levels of the categorical predictor, only that differences in that predictor explain variability in the Output. This question refers to random effects."
 
 - Class: text
-  Outcome: "Kevin has/will review the theory behind fixed and random effects, I'm just going to give you some practical advice and an example. The first bit of practical advice is that you should refer to the course texts and Kevin's notes for answers to questions on fixed/random effects. That distinction maps onto at least 5 different published definitions, all of which are at odds with one another, and googling is more likely to confuse you than to help."
+  Output: "Kevin has or will go over the theory behind fixed and random effects, I will only provide some advice and an example. First advice: Refer to the course texts and notes for help. There are many definitions for fixed and random effects, most of which are conflicting."
 
 - Class: text
-  Outcome: "Your second bit of advice is that the distinction only matters when there are multiple factors in your model. If you have a one-way ANOVA, there is no difference between a fixed effect and a random one."
+  Output: "Your second bit of advice is that the distinction only matters when there are multiple factors in your model. If you have a one-way ANOVA, there is no difference between a fixed effect and a random one."
 
 - Class: cmd_question
-  Outcome: "Alright, an example. We want to predict chick weights once again. This time, however, we're going to control for variability in measurements over time. In the process, we're going to do some things that R will really hate. Before we move on, take a summary of ChickWeight and notice I've included Time as a factor, (time with a lowercase t is not a factor), we we can run a proper ANOVA (because obviously ANCOVA is a completely different topic that you can't possibly be expected to understand yet)."
+  Output: "Alright, an example. We want to predict chick weights once again. This time, however, we're going to control for variability in measurements over time. In the process, we're going to do some things that R will really hate. Before we move on, take a summary of ChickWeight and notice I've included Time as a factor, (time with a lowercase t is not a factor), we we can run a proper ANOVA (because obviously ANCOVA is a completely different topic that you can't possibly be expected to understand yet)."
   CorrectAnswer: summary(ChickWeight)
   AnswerTests: omnitest(correctExpr='summary(ChickWeight)')
-  Hint: Type summary(ChickWeight) to view the necessary dataset.
+  Hint: "Type summary(ChickWeight) to view the necessary dataset."
 
 - Class: cmd_question
-  Outcome: "The first way you might imagine predicting weight using Diet and controlling for time is to use a formula like: weight ~ Diet + Time + Diet:Time. This would give you the fixed effects estimates for each of the terms in your model: Diet, Time, and the interaction. This model is already in your workspace, get a summary.aov of the object called fixed to see what this looks like."
+  Output: "The first way you might imagine predicting weight using Diet and controlling for time is to use a formula like: weight ~ Diet + Time + Diet:Time. This would give you the fixed effects estimates for each of the terms in your model: Diet, Time, and the interaction. This model is already in your workspace, get a summary.aov of the object called fixed to see what this looks like."
   CorrectAnswer: summary.aov(fixed)
   AnswerTests: omnitest(correctExpr='summary.aov(fixed)')
-  Hint: Type summary.aov(fixed) to view the necessary model.
+  Hint: "Type summary.aov(fixed) to view the necessary model."
 
 - Class: figure
   Output: "This model corresponds to the first table in the associated text file. Each component (A, B, and the interaction, AB) is tested by dividing the MS_effect by the MS_residual. You can easily see that if the null were true in any of these cases, and the effect of A, B, or AB were exactly zero, the expected SS would be one."
@@ -36,10 +36,10 @@
   FigureType: new
 
 - Class: cmd_question
-  Output: "This model is what you would use if the measurement times and diets were chosen specifically and were not drawn from any larger population. Instead, let's pretend that both Time and Diet are randomly sampled from infinitely many possible measurement times and diet regimes. We specify this with the command aov(weight ~ Time + Diet + Error(Time:Diet)). aov is another way of building ANOVA models in R that will allow us to explicitly specify the error term. This is not the only difference between lm and aov, but we can return to the other big difference (which type of sums of squares the functions calculate) some other time. For now, take a summary.aov of random, another model that's already in your workspace."
-  CorrectAnswer: summary.aov(random)
-  AnswerTests: omnitest(correctExpr='summary.aov(random)')
-  Hint: Type summary.aov(random) to view the necessary model.
+  Output: "This model is what you would use if the measurement times and diets were chosen specifically and were not drawn from any larger population. Instead, let's pretend that both Time and Diet are randomly sampled from infinitely many possible measurement times and diet regimes. We specify this with the command aov(weight ~ Time + Diet + Error(Time:Diet)). aov is another way of building ANOVA models in R that will allow us to explicitly specify the error term. This is not the only difference between lm and aov, but we can return to the other big difference (which type of sums of squares the functions calculate) some other time. For now, take a summary of random, another model that's already in your workspace."
+  CorrectAnswer: summary(random)
+  AnswerTests: omnitest(correctExpr='summary(random)')
+  Hint: "Type summary(random) to view the necessary model."
 
 - Class: mult_question
   Output: "R doesn't like this model and tells us the error term is singular. That's ok, it just means it can't test the interaction term against itself. You might notice that there's no test for the interaction. Where can we find that test?"
@@ -57,8 +57,8 @@
 - Class: cmd_question
   Output: "A quick way to get mean squared error values from a fixed effects model is by using the syntax: anova(MODEL)[['Mean Sq']]. Try this with the fixed model and assign the output vector to a variable named mse."
   CorrectAnswer: mse <- anova(fixed)[['Mean Sq']]
-  AnswerTests: omnitest(correctExpr='mse <- anova(fixed)[['Mean Sq']]')
-  Hint: Copy and paste the code from the instructions, replace MODEL with fixed.
+  AnswerTests: omnitest(correctExpr='mse <- anova(fixed)[["Mean Sq"]]')
+  Hint: "Copy and paste the code from the instructions, replace MODEL with fixed."
 
 - Class: cmd_question
   Output: Now let's assume you want to treat Diet as a random effect. Divide the value in the 1st position of mse by the value in the 3rd position of mse. These values correspond tot he MSE of the Diet and Diet:Time effects.
@@ -67,4 +67,4 @@
   Hint: Remember square braces are used for indexing.
 
 - Class: text
-  Output: There you go, fixed and random effects. Kevin will discuss them quite a bit in class, but hopefully the R syntax and table of expected mean squares is helpful both with the homework and interpreting the later lessons.
+  Output: "There you go, fixed and random effects. Kevin will discuss them quite a bit in class, but hopefully the R syntax and table of expected mean squares is helpful both with the homework and interpreting the later lessons."
