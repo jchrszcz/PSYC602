@@ -32,7 +32,7 @@
 
 - Class: figure
   Output: "This model corresponds to the first table in the associated text file. Each component (A, B, and the interaction, AB) is tested by dividing the MS_effect by the MS_residual. You can easily see that if the null were true in any of these cases, and the effect of A, B, or AB were exactly zero, the expected SS would be one."
-  Figure: expected.txt
+  Figure: showExpected.R
   FigureType: new
 
 - Class: cmd_question
