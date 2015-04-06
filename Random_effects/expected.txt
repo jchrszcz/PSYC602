@@ -1,0 +1,28 @@
+Fixed
+-----
+Term    | Expected Sums of Squares
+--------|-------------------------
+A       |  σ^2 + Effect_A
+B       |  σ^2 + Effect_B
+AB      |  σ^2 + Effect_AB
+Error   |  σ^2
+  
+
+Random
+-----
+Term    | Expected Sums of Squares
+--------|-------------------------
+A       |  σ^2 + Effect_A + Effect_AB
+B       |  σ^2 + Effect_B + Effect_AB
+AB      |  σ^2 + Effect_AB
+Error   |  σ^2
+
+
+Mixed
+-----
+Term    | Expected Sums of Squares
+--------|-------------------------
+A (R)   |  σ^2 + Effect_A
+B (F)   |  σ^2 + Effect_B + Effect_AB
+AB      |  σ^2 + Effect_AB
+Error   |  σ^2

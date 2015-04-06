@@ -115,16 +115,16 @@
   Hint: "Add the following to your previous model: summary(lm(weight ~ Diet, contrasts = list(Diet = contr.sum), data = ChickWeight))"
 
 - Class: cmd_question
-  Output: Where do these coefficients come from? The intercept is the mean of weight across all Diet groups, often called the grand mean. Take the mean of weight and compare it to the intercept value.
-  CorrectAnswer: mean(ChickWeight$weight)
-  AnswerTests: omnitest(correctExpr='mean(ChickWeight$weight)')
-  Hint: Use the mean function on the vector of weights in ChickWeight.
+  Output: Where do these coefficients come from? The intercept is the unweighted mean of mean weights for each Diet group, often called the grand mean. Take the mean of weight and compare it to the intercept value.
+  CorrectAnswer: mean(tapply(ChickWeight$weight, ChickWeight$Diet, mean))
+  AnswerTests: omnitest(correctExpr='mean(tapply(ChickWeight$weight, ChickWeight$Diet, mean))')
+  Hint: Use the mean function on the vector of mean weights for each level of Diet. The latter can be calculated again using tapply().
 
 - Class: cmd_question
   Output: "A quick way to get the slope coefficient values is to take the difference between the weights for each diet and the grand mean. Use tapply to do this, but note that you'll end up with the additional implied deviation. With planned comparisons, we can only get K - 1 deviations from the grand mean. The reason is similar to the bias correction for variance: once we've calculated a grand mean and K - 1 deviations from it, we already know what the last deviation has to be to give a mean of deviations equal to 0."
-  CorrectAnswer: tapply(ChickWeight$weight, ChickWeight$Diet, mean) - mean(ChickWeight$weight)
-  AnswerTests: omnitest(correctExpr='tapply(ChickWeight$weight, ChickWeight$Diet, mean) - mean(ChickWeight$weight)')
-  Hint: tapply(...) - mean(...)
+  CorrectAnswer: tapply(ChickWeight$weight, ChickWeight$Diet, mean) - mean(tapply(ChickWeight$weight, ChickWeight$Diet, mean))
+  AnswerTests: omnitest(correctExpr='tapply(ChickWeight$weight, ChickWeight$Diet, mean) - mean(tapply(ChickWeight$weight, ChickWeight$Diet, mean))')
+  Hint: tapply(...) - mean(tapply(...))
  
 - Class: cmd_question
   Output: The last contrast code we'll talk about is the Helmert code, often referred to generically as orthogonal coding. There are many orthogonal coding schemes, (you can even make up your own). Try running the same weight ~ Diet model, now specifying contr.helmert for the Diet contrast.
