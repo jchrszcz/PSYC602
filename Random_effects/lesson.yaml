@@ -61,7 +61,7 @@
   Hint: "Copy and paste the code from the instructions, replace MODEL with fixed."
 
 - Class: cmd_question
-  Output: Now let's assume you want to treat Diet as a random effect. Divide the value in the 1st position of mse by the value in the 3rd position of mse. These values correspond tot he MSE of the Diet and Diet:Time effects.
+  Output: Now let's assume you want to treat Time as a random effect. Divide the value in the 1st position of mse by the value in the 3rd position of mse. These values correspond tot he MSE of the Diet and Diet:Time effects.
   CorrectAnswer: mse[1] / mse[3]
   AnswerTests: omnitest(correctExpr='mse[1] / mse[3]')
   Hint: Remember square braces are used for indexing.
